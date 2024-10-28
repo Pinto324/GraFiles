@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu Empleado</title>
+</head>
+<body>
+    <div id="ContenedorPrincipal">
+        <div id="ContenedorBotones">
+
+        </div>
+        <div id="ContenedorCarpetas">
+            <div *ngFor="let archivo of archivos" class="carpeta">
+                <img [src]="getIconPath(archivo.extension)" alt="Icono" class="icono">
+                <p>{{ archivo.NombreCarpeta }}</p>
+                <span>{{ archivo.extension }}</span>
+              </div>
+        </div>
+    </div>
+</body>
+</html>

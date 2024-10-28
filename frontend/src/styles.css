@@ -1,1 +1,36 @@
 /* You can add global styles to this file, and also import other style files */
+html, body {
+    height: 100%;
+    margin: 0;
+    overflow: hidden; /* Evita la barra de desplazamiento global */
+}
+
+app-root {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+#ContendorPrincipal {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background-color: #3f3f3f;
+}
+
+#ContenedorBotones {
+    flex: 0 0 auto;
+    background-color: #7f3939; /* Color para el header */
+    width: 80%;
+    margin: auto;
+    padding: 10px;
+}
+
+#ContenedorCarpetas {
+    flex: 1 1 auto;
+    width: 80%;
+    margin: auto;
+    overflow-y: auto; /* Barra de desplazamiento solo en este contenedor */
+    padding: 10px;
+    background-color: #929292;
+}
