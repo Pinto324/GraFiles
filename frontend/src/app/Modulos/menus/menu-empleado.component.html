@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu Empleado</title>
+</head>
+<body>
+    <app-modal-archivos [isOpen]="isModalOpen" [archivoSeleccionado]="archivoSeleccionado" (close)="cerrarModal()"></app-modal-archivos>
+      <div id="ContenedorPrincipal">
+        <div id="ContenedorBotones">
+          <!-- Botones adicionales si es necesario -->
+        </div>
+        <div id="ContenedorCarpetas">
+          <div *ngFor="let archivo of archivos" (click)="abrirModal(archivo)" class="carpeta">
+            <img [src]="getIconPath(archivo.Extension)" alt="Icono" class="iconimage">
+            <span>{{ archivo.Nombre }}</span>
+          </div>
+        </div>
+      </div>
+</body>
+</html>

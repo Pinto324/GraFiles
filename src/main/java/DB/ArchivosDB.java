@@ -5,10 +5,17 @@
  */
 package DB;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.mongodb.client.MongoCollection;
 import static com.mongodb.client.model.Filters.eq;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.bson.Document;
 
 /**
@@ -17,11 +24,11 @@ import org.bson.Document;
  */
 public class ArchivosDB {
     private Conexion con = new Conexion();
-
-    public String[] ObtenerArchivosPropio(String usuario, String contra) {
-        
-        Document Usuario = null;
-        String[] Info = new String[3];
-        return null;
+    
+    public JsonArray ObtenerArchivosPropio(String Id, String PadreId) {
+            String parte = "docker exec mongo-container mongosh GraFiles --eval";
+            String execCommand = String.format(parte+" \"db.archivo.find({PropietarioId: %s, Habilitado: true, PadreId:%s})\"", Id,PadreId);
+            System.out.println(execCommand);
+            return con.ejecutarComandoPowerShellJson(execCommand);
     }
 }

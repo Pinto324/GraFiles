@@ -29,7 +29,7 @@ export class LoginComponent {
     this.http.post(url, body.toString(), options).subscribe(
       (response: any) => {
         if (response.valid) {
-          this.userService.setUser(response.username, response.tipo);
+          this.userService.setUser(response.username, response.tipo, response.id);
           this.loginEvent.emit(response.tipo); 
         } else {
           alert('Nombre de usuario o contraseña incorrectos.');

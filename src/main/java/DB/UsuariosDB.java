@@ -5,9 +5,15 @@
  */
 package DB;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import static com.mongodb.client.model.Filters.eq;
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -22,50 +28,36 @@ import org.bson.conversions.Bson;
 public class UsuariosDB {
 
     private Conexion con = new Conexion();
-    private final String URL = "mongodb://localhost:27017";
+    private final String scriptsUrl = "docker exec mongo-container mongosh GraFiles --eval";;
 
     public String[] comprobarContraseña(String usuario, String contra) {
-        String[] Info = new String[3];
+        String[] Info = new String[4];
         try {
-            // Comando de PowerShell para buscar el usuario en MongoDB
-            System.out.println("Comando");
-            String scriptPath = "C:/ruta/a/tu/script.js"; 
-            String comando = String.format(
-                    "docker exec -i mongodb-container mongosh %s",
-                    scriptPath
-            ); 
-            String resultado = con.ejecutarComandoPowerShellString(comando);
-            System.out.println("Resultado de la consulta: " + resultado);
-            // Procesar la salida JSON
+            String execCommand = String.format(scriptsUrl+" \"db.usuario.findOne({ Username: '%s' })\"", usuario);
+            String resultado = con.ejecutarComandoPowerShellString(execCommand);
             if (resultado != null && !resultado.isEmpty()) {
-                // Parsear el resultado JSON para obtener los datos
-                String[] lines = resultado.split("\n");
-                String json = lines[lines.length - 1]; // La última línea debe ser el JSON
-
-                // Extraer el valor del hash de la contraseña y el rol del usuario
-                // Asumiendo que el JSON es algo así: { "_id": "...", "Username": "...", "Password": "...", "Rol": "..." }
-                String valorHashAlmacenado = ""; // Extraer del JSON
-                String rol = ""; // Extraer del JSON
-
-                // Utilizar una librería como org.json para parsear el JSON si es necesario
-                // o usar simple string manipulation
-                // Ejemplo de extracción (puedes reemplazar esto con una mejor forma de parseo JSON)
-                if (json.contains("Password")) {
-                    valorHashAlmacenado = json.split("\"Password\": \"")[1].split("\"")[0];
-                    rol = json.split("\"Rol\": \"")[1].split("\"")[0];
-                    System.out.println(rol);
-                }
-                MessageDigest digest = MessageDigest.getInstance("SHA-256");
-                byte[] valorHashCalculado = digest.digest(contra.getBytes());
-                String valorHashCalculadoHex = bytesToHex(valorHashCalculado);
-                if (valorHashAlmacenado.equals(valorHashCalculadoHex)) {
-                    Info[2] = usuario; // Username
-                    Info[1] = rol; // Rol
-                    Info[0] = "Correcto";
-                    return Info;
+                String jsonResult = resultado.trim();
+                if (jsonResult.startsWith("{") && jsonResult.endsWith("}")) {
+                    Gson gson = new Gson();
+                    JsonObject jsonObject = gson.fromJson(jsonResult, JsonObject.class);
+                    String valorHashAlmacenado = jsonObject.getAsJsonPrimitive("Password").getAsString();
+                    String rol = jsonObject.getAsJsonPrimitive("Rol").getAsString();
+                    String Id = jsonObject.getAsJsonPrimitive("_id").getAsString();
+                    MessageDigest digest = MessageDigest.getInstance("SHA-256");
+                    byte[] valorHashCalculado = digest.digest(contra.getBytes());
+                    String valorHashCalculadoHex = bytesToHex(valorHashCalculado);
+                    if (valorHashAlmacenado.equals(valorHashCalculadoHex)) {
+                        Info[3] = Id;
+                        Info[2] = usuario; // Username
+                        Info[1] = rol; // Rol
+                        Info[0] = "Correcto";
+                        return Info;
+                    } else {
+                        Info[0] = "Incorrecto";
+                        return Info;
+                    }
                 } else {
-                    Info[0] = "Incorrecto";
-                    return Info;
+                    System.out.println("El resultado no es un JSON válido: " + resultado);
                 }
             } else {
                 Info[0] = "Nulo";

@@ -3,7 +3,7 @@ import { RouterOutlet } from '@angular/router';
 import { LoginComponent } from './Modulos/login/login.component'; 
 import { UserService } from './Utilidades/Usuario';
 import { Router } from '@angular/router';
-import { MenuEmpleadoComponent } from '../App/Modulos/menus/menu-empleado/menu-empleado.component';
+import { MenuEmpleadoComponent } from './Modulos/menus/menu-empleado.component';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 @Component({

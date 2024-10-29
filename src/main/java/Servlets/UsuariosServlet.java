@@ -49,6 +49,7 @@ public class UsuariosServlet extends HttpServlet {
             // Responder según el resultado de la verificación
             if ("Correcto".equals(datos[0])) {
                 responseData.addProperty("valid", true);
+                responseData.addProperty("id", datos[3]);
                 responseData.addProperty("username", datos[2]);
                 responseData.addProperty("tipo", datos[1]);
                 response.setStatus(HttpServletResponse.SC_OK);

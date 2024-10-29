@@ -4,13 +4,15 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class UserService {
+  private id: any;
   private username: any;
   private tipo: any;
   constructor() { }
 
-  setUser(username: any, tipo: any) {
+  setUser(username: any, tipo: any, id: any) {
     this.username = username;
     this.tipo = tipo;
+    this.id = id;
   }
 
   getUsername() {
@@ -18,5 +20,8 @@ export class UserService {
   }
   getTipo(){
     return this.tipo;
+  }
+  getId(){
+    return this.id;
   }
 }
