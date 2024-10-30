@@ -20,6 +20,7 @@ html, body {
 }
 
 #ContenedorBotones {
+    display: flex;
     flex: 0 0 auto;
     background-color: #c4c4c4;
     margin-top: 1%;
@@ -55,12 +56,29 @@ html, body {
     padding: 10px;
     border-radius: 8px;
     transition: background-color 0.3s ease;
+    z-index: 5;
 }
 .carpeta:hover{
-    background-color: #535353;;
+    background-color: #535353;
 }
 
 .iconimage {
     width: 60px;
     height: 60px;
+}
+
+#ContenedorRetroceder{
+    width: 7%;
+    display: flex;
+    align-items: center;
+    transition: background-color 0.3s ease;
+    border-radius: 8px;
+}
+#ContenedorRetroceder:hover{
+    background-color: #535353;
+}
+.bloqueado {
+    opacity: 0.5;
+    pointer-events: none; /* Bloquea la interacción */
+    cursor: not-allowed;  /* Cambia el cursor a uno de "prohibido" */
 }

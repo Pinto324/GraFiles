@@ -46,6 +46,42 @@ public class ArchivosServlet extends HttpServlet {
                 out.print(jsonOutput);
             }
             out.flush();
+        }else if(accion != null && accion.equals("retroceder")) {
+            String Id = request.getParameter("Id");
+            String PadreId = request.getParameter("Padre");
+            response.setContentType("application/json");
+            PrintWriter out = response.getWriter();
+            JsonArray jsonObject = DB.ObtenerArchivosAbuelo(Id,PadreId);
+            if (jsonObject == null) {
+                // Enviar un JSON vacío o un mensaje de error
+                out.print("{\"error\": \"No se encontraron resultados\"}");
+            } else {
+                String jsonOutput = jsonObject.toString();
+                out.print(jsonOutput);
+            }
+            out.flush();
+        }
+    }
+    
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // Permitir solicitudes CORS desde el frontend en localhost
+        response.setHeader("Access-Control-Allow-Origin", "http://localhost:4200");
+        response.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+        response.setHeader("Access-Control-Allow-Headers", "Content-Type");
+        response.setContentType("application/json"); // Asegura que el tipo de contenido sea JSON
+
+        // Recibir parámetro de acción y verificar login
+        String accion = request.getParameter("accion");
+        if (accion != null && accion.equals("IngresarCarpeta")) {
+            String NombreCarpeta = request.getParameter("NombreCarpeta");
+            String IdPadre = request.getParameter("IdPadre");
+            String IdCreador = request.getParameter("IdCreador");
+            if (DB.CrearCarpeta(NombreCarpeta, IdPadre,IdCreador)) {
+                response.setStatus(HttpServletResponse.SC_OK);
+            } else {
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            }
         }
     }
 

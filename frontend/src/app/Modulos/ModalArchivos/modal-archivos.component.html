@@ -2,14 +2,19 @@
   <div class="modalC-content">
     <div class="modalc-header">
         <h4 class="modalc-title">
-            Información del archivo
+            Opcion.
         </h4>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" (click)="closeModal()">
                 <line x1="18" y1="6" x2="6" y2="18" />
                 <line x1="6" y1="6" x2="18" y2="18" />
             </svg>
     </div>
-    <div class="modalC-container"> 
+    <div *ngIf="archivoSeleccionado==='Nueva Carpeta'" class="modalC-container"> 
+      <h2>Escriba el nombre de la nueva carpeta:</h2> <!-- Muestra el nombre del archivo -->
+      <input  [(ngModel)]="valorInput" type="text"> <!-- Muestra la extensión del archivo -->
+      <button (click)="CrearCarpeta()">Crear Carpeta</button>
+    </div>
+    <div *ngIf="false" class="modalC-container"> 
       <h2>{{ archivoSeleccionado?.Nombre }}</h2> <!-- Muestra el nombre del archivo -->
       <p>Extensión: {{ archivoSeleccionado?.Extension }}</p> <!-- Muestra la extensión del archivo -->
       <button (click)="closeModal()">Cerrar Modal</button>

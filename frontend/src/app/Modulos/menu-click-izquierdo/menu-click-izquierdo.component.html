@@ -1,0 +1,16 @@
+<div class="modal" *ngIf="isVisible" (click)="cerrarMenu()">
+    <div *ngIf="isVisible" [ngStyle]="{'top.px': position.y, 'left.px': position.x}" class="context-menu">
+        <ul *ngIf="contextType === 'contenedor'">
+          <li (click)="opcionSeleccionada('Nueva Carpeta')">Nueva Carpeta</li>
+          <li (click)="opcionSeleccionada('Refrescar')">Refrescar</li>
+        </ul>
+        <ul *ngIf="contextType === 'carpeta'">
+          <li (click)="opcionSeleccionada('Editar')">Abrir</li>
+          <li (click)="opcionSeleccionada('Compartir')">Renombrar</li>
+          <li (click)="opcionSeleccionada('Eliminar')">Eliminar</li>
+        </ul>
+      </div>
+</div>
+<app-modal-archivos (Actualizar)="manejarActualizar($event)" [isOpen]="isModalOpen" [archivoSeleccionado]="archivoSeleccionado" [IdPadre]="idPadre" (close)="cerrarModal()"></app-modal-archivos>
+
+  
