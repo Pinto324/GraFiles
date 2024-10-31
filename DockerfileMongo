@@ -1,0 +1,5 @@
+docker run -d --name mongodb \
+  -p 27017:27017 \
+  --restart unless-stopped \
+  mongodb/mongodb-enterprise-server:latest \
+  mongod --bind_ip_all --auth false  mongodb/mongodb-enterprise-server:latest
