@@ -62,6 +62,16 @@ public class UsuariosServlet extends HttpServlet {
             PrintWriter out = response.getWriter();
             out.write(responseData.toString());
             out.flush();
+        }else if (accion != null && accion.equals("CrearUsuario")) {
+            String Usuario = request.getParameter("Usuario");
+            String Password = request.getParameter("Password");
+            String name = request.getParameter("Nombre");
+            String[] datos = DB.comprobarContraseña(Usuario, Password);
+            if (DB.CrearUsuario(Usuario, Password, name)) {
+                response.setStatus(HttpServletResponse.SC_OK);
+            } else {
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            }
         }
     }
 

@@ -1,2 +1,3 @@
 <app-login *ngIf="Login" (loginEvent)="onLogin($event)"></app-login>
-<app-menu-empleado *ngIf="Empleado"></app-menu-empleado>
+<app-menu-empleado *ngIf="Empleado" (EmpleadoEvent)="onLogout()"></app-menu-empleado>
+<app-menu-admin *ngIf="Admin" (AdminEvent)="onLogout()"></app-menu-admin>

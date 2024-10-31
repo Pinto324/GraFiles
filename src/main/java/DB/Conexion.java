@@ -12,6 +12,10 @@ import com.google.gson.JsonParser;
 import com.mongodb.client.*;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import org.bson.Document;
 
 /**
@@ -63,7 +67,9 @@ public class Conexion {
         } catch (Exception e) {
             System.out.println("Error al ejecutar el comando: " + e.getMessage());
         }
-        return output.toString(); // Devuelve la salida del comando
+
+        // Reemplaza "(*XDXD)" por saltos de línea antes de devolver el resultado
+        return output.toString().replace("(*XDXD)", "\n");
     }
 
     public JsonArray ejecutarComandoPowerShellJson(String comando) {
@@ -87,14 +93,13 @@ public class Conexion {
             System.out.println("Error al ejecutar el comando: " + e.getMessage());
         }
 
-        // Imprime la salida sin procesar
-        System.out.println("Salida del comando: " + output.toString());
+        // Reemplaza `(*XDXD)` por saltos de línea
+        String outputString = output.toString().replace("(*XDXD)", "\n");
 
-        // Convierte la salida en JsonArray
         JsonArray jsonArray = null;
         try {
             Gson gson = new Gson();
-            jsonArray = gson.fromJson(output.toString(), JsonArray.class);
+            jsonArray = gson.fromJson(outputString, JsonArray.class);
 
         } catch (Exception e) {
             System.out.println("Error al convertir la salida en JSON Array: " + e.getMessage());
@@ -117,6 +122,37 @@ public class Conexion {
                     int start = line.indexOf("ObjectId('") + 10;
                     int end = line.indexOf("')", start);
                     padreId = line.substring(start, end);
+                    break;
+                }
+            }
+
+            int exitCode = proceso.waitFor();
+            if (exitCode != 0) {
+                System.out.println("Error al ejecutar el comando. Código de salida: " + exitCode);
+            }
+
+        } catch (Exception e) {
+            System.out.println("Error al ejecutar el comando: " + e.getMessage());
+        }
+        System.out.println(padreId);
+        return padreId;
+    }
+    
+    public String ejecutarComandoYObtenerId(String comando) {
+        StringBuilder output = new StringBuilder();
+        String padreId = null;
+        try {
+            ProcessBuilder processBuilder = new ProcessBuilder("cmd.exe", "/c", comando);
+            processBuilder.redirectErrorStream(true);
+            Process proceso = processBuilder.start();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(proceso.getInputStream()));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                output.append(line).append("\n");
+                if (line.contains("_id")) {
+                    int start = line.indexOf("ObjectId('");
+                    int end = line.indexOf("')", start);
+                    padreId = line.substring(start, end+2);
                     break;
                 }
             }
@@ -173,6 +209,46 @@ public class Conexion {
             System.out.println("Error al ejecutar el comando: " + e.getMessage());
             return true; // Devuelve false en caso de excepción
         }
+    }
+
+    public Set<String> obtenerIdsHijardos(String comando) {
+        Set<String> idsHijos = new HashSet<>();
+        StringBuilder output = new StringBuilder();
+
+        try {
+            ProcessBuilder processBuilder = new ProcessBuilder("cmd.exe", "/c", comando);
+            processBuilder.redirectErrorStream(true);
+            Process proceso = processBuilder.start();
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(proceso.getInputStream()));
+            String line;
+
+            while ((line = reader.readLine()) != null) {
+                output.append(line).append("\n");
+                if (line.contains("ObjectId(")) {
+                    int start = line.indexOf("ObjectId('") + 10;
+                    int end = line.indexOf("')", start);
+
+                    // Verifica que las posiciones sean válidas
+                    if (start > 9 && end > start) {
+                        String hijoId = line.substring(start, end);
+                        idsHijos.add("ObjectId('" + hijoId + "')");
+                        System.out.println("ObjectId('" + hijoId + "')");
+                    }
+                }
+            }
+
+            int exitCode = proceso.waitFor();
+            if (exitCode != 0) {
+                System.out.println("Error al ejecutar el comando. Código de salida: " + exitCode);
+            }
+
+        } catch (Exception e) {
+            System.out.println("Error al ejecutar el comando: " + e.getMessage());
+        }
+
+        System.out.println("Ids de hijos encontrados: " + idsHijos);
+        return idsHijos;
     }
 
 }

@@ -2,23 +2,89 @@
   <div class="modalC-content">
     <div class="modalc-header">
         <h4 class="modalc-title">
-            Opcion.
+            Menu:
         </h4>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" (click)="closeModal()">
                 <line x1="18" y1="6" x2="6" y2="18" />
                 <line x1="6" y1="6" x2="18" y2="18" />
             </svg>
     </div>
+
     <div *ngIf="archivoSeleccionado==='Nueva Carpeta'" class="modalC-container"> 
-      <h2>Escriba el nombre de la nueva carpeta:</h2> <!-- Muestra el nombre del archivo -->
-      <input  [(ngModel)]="valorInput" type="text"> <!-- Muestra la extensión del archivo -->
-      <button (click)="CrearCarpeta()">Crear Carpeta</button>
+        <h2>Escriba el nombre de la nueva carpeta:</h2> 
+        <input  [(ngModel)]="valorInput" type="text"> 
+        <button (click)="CrearCarpeta()">Compartir</button>
+      </div>
+      <div *ngIf="Compartir && archivoSeleccionado.Extension!='carpeta'" class="modalC-container"> 
+        <h2>Escriba el nombre del usuario a compartir:</h2> 
+        <input  [(ngModel)]="valorInput" type="text"> 
+        <button (click)="CompartirArchivo()">Crear Carpeta</button>
+      </div>
+
+    <div *ngIf="archivoSeleccionado === 'Texto'&&!(Compartir)" class="modalC-container"> 
+      <h2>Editor de Texto</h2>
+    
+      <label for="nombreArchivo">Nombre del Archivo:</label>
+      <input [(ngModel)]="nombreArchivo" type="text" placeholder="Nombre del archivo">
+  
+      <label for="extensionArchivo">Selecciona la Extensión:</label>
+      <select [(ngModel)]="extensionArchivo">
+          <option *ngFor="let ext of extensiones" [value]="ext">{{ ext }}</option>
+      </select>
+  
+      <label for="editorTexto">Texto:</label>
+      <textarea [(ngModel)]="textoGuardado" rows="10" placeholder="Escribe aquí..."></textarea>
+  
+      <div class="modal-buttons">
+          <button (click)="guardarTexto()">Guardar</button>
+          <button (click)="closeModal()">Cerrar</button>
+      </div>
     </div>
-    <div *ngIf="false" class="modalC-container"> 
-      <h2>{{ archivoSeleccionado?.Nombre }}</h2> <!-- Muestra el nombre del archivo -->
-      <p>Extensión: {{ archivoSeleccionado?.Extension }}</p> <!-- Muestra la extensión del archivo -->
+
+
+    <div *ngIf="(archivoSeleccionado.Extension === 'txt'||archivoSeleccionado.Extension === 'html')&&archivoSeleccionado.Habilitado" class="modalC-container"> 
+      <h2>Editor de Texto</h2>
+    
+      <label for="nombreArchivo">Nombre del Archivo:</label>
+      <input [(ngModel)]="archivoSeleccionado.Nombre" type="text" placeholder="Nombre del archivo">
+  
+      <label for="extensionArchivo">Selecciona la Extensión:</label>
+      <select [(ngModel)]="archivoSeleccionado.Extension">
+          <option *ngFor="let ext of extensiones" [value]="ext">{{ ext }}</option>
+      </select>
+  
+      <label for="editorTexto">Texto:</label>
+      <textarea [(ngModel)]="archivoSeleccionado.Contenido" rows="10" placeholder="Escribe aquí..."></textarea>
+  
+      <div class="modal-buttons">
+          <button (click)="guardarTextoAntiguo()">Guardar</button>
+          <button (click)="closeModal()">Cerrar</button>
+      </div>
+    </div>
+    <div *ngIf="desactivado" class="modalC-container"> 
+      <h2>Nombre: {{ archivoSeleccionado.Nombre }}</h2> 
+      <h2>Extensión: {{ archivoSeleccionado.Extension }}</h2> 
+      <h2>Fecha de Creación: {{ archivoSeleccionado.FechaCreacion }}</h2> 
+      <h2 *ngIf="!(archivoSeleccionado.Extension ==='carpeta')">Ultima Modificación: {{ archivoSeleccionado.FechaModificacion }}</h2> 
       <button (click)="closeModal()">Cerrar Modal</button>
     </div>
+  </div>
+  <div *ngIf="archivoSeleccionado === 'CrearUsuario'" class="modalC-container"> 
+    <form (ngSubmit)="crearUsuario()">
+      <label for="username">Nombre de usuario:</label>
+      <input type="text" id="username" [(ngModel)]="username" name="username" required>
+      <label for="username">Nombre:</label>
+      <input type="text" id="username" [(ngModel)]="name" name="username" required>
+      <label for="password">Contraseña:</label>
+      <input type="password" id="password" [(ngModel)]="password" name="password" required>
+
+      <label for="confirmPassword">Confirmar Contraseña:</label>
+      <input type="password" id="confirmPassword" [(ngModel)]="confirmPassword" name="confirmPassword" required>
+
+      <div *ngIf="passwordMismatch" class="error">Las contraseñas no coinciden</div>
+
+      <button type="submit">Crear Usuario</button>
+  </form>
   </div>
 </div>
   

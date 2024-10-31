@@ -1,0 +1,13 @@
+.git
+
+.firebase
+
+.editorconfig
+
+/node_modules
+
+/docs
+
+/e2e
+
+*.zip

@@ -6,13 +6,22 @@
     <title>Menu Empleado</title>
 </head>
 <body>
-  <app-modal-archivos [isOpen]="isModalOpen" [archivoSeleccionado]="archivoSeleccionado" (close)="cerrarModal()"></app-modal-archivos>
-  <app-menu-click-izquierdo #contextMenu [idPadre]="padre"></app-menu-click-izquierdo>
+  <app-modal-archivos *ngIf="isModalOpen" [ModificarTexto]="ModificarTexto" [isOpen]="isModalOpen" [archivoSeleccionado]="archivoSeleccionado" (close)="cerrarModal()"[textoGuardado]="archivoSeleccionado.Contenido"></app-modal-archivos>
+  <app-menu-click-izquierdo [Compartiendo]="EsRoot" (Actualizar)="manejarActualizar($event)"  #contextMenu [idPadre]="padre"></app-menu-click-izquierdo>
   
   <div id="ContenedorPrincipal">
     <div id="ContenedorBotones">
       <div [ngClass]="{ 'bloqueado': root === padre }" id="ContenedorRetroceder" (click)="bloquearRetroceder()">
         <img src="assets/Retroceder.png" alt="atras" style="width: 100%;">
+      </div>
+      <div  id="ContenedorLogout" (click)="deslogear()">
+        <img src="assets/logout.png" alt="logout" style="width: 60%;">
+      </div>
+      <div  id="ContenedorLogout" (click)="activarRoot()">
+        <img src="assets/root.png" alt="logout" style="width: 60%;">
+      </div>
+      <div  id="ContenedorLogout" (click)="activarCompartido()">
+        <img src="assets/participacion.png" alt="logout" style="width: 60%;">
       </div>
     </div>
     

@@ -1,0 +1,31 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu Empleado</title>
+</head>
+<body>
+  <app-modal-archivos *ngIf="isModalOpen" [isOpen]="isModalOpen" [archivoSeleccionado]="archivoSeleccionado" [desactivado]="esCrearUsuario()" (close)="cerrarModal()"></app-modal-archivos>
+
+  <div id="ContenedorPrincipal">
+    <div id="ContenedorBotones">
+      <div  id="ContenedorLogout" (click)="deslogear()">
+        <img src="assets/logout.png" alt="logout" style="width: 60%;">
+      </div>
+      <div  id="ContenedorLogout" (click)="abrirModal('CrearUsuario')">
+        <img src="assets/CrearUsuario.png" alt="logout" style="width: 60%;">
+      </div>
+    </div>
+    <div id="ContenedorCarpetas">
+      <div *ngFor="let archivo of archivos" 
+           (click)="abrirModal(archivo)" 
+           class="carpeta">
+        <img [src]="getIconPath(archivo.Extension)" alt="Icono" class="iconimage">
+        <span>{{ archivo.Nombre }}</span>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

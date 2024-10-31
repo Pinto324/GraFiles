@@ -18,6 +18,8 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
@@ -79,5 +81,26 @@ public class UsuariosDB {
             stringBuilder.append(String.format("%02x", b));
         }
         return stringBuilder.toString();
+    }
+    
+    public boolean CrearUsuario(String User, String password, String name) {
+        String parte = "docker exec mongo-container mongosh GraFiles --eval";
+        String consulta = String.format("db.usuario.find({Username: '%s'}).limit(1).count()", User);
+        String execCommand = parte + " \"" + consulta + "\"";
+        if (con.ejecutarComandoMongoShellBoolean(execCommand, 1)) {
+            return false;
+        } else {
+            MessageDigest digest = null;
+            try {
+                digest = MessageDigest.getInstance("SHA-256");
+            } catch (NoSuchAlgorithmException ex) {
+                Logger.getLogger(UsuariosDB.class.getName()).log(Level.SEVERE, null, ex);
+            }
+                    byte[] valorHashCalculado = digest.digest(password.getBytes());
+                    String valorHashCalculadoHex = bytesToHex(valorHashCalculado);
+            execCommand = String.format(parte + " \"db.usuario.insertOne({Username: '%s',  Password: '%s', Nombre: '%s', Rol: 'Empleado'})\"", User, valorHashCalculadoHex, name);
+            System.out.println(execCommand);
+            return con.ejecutarComandoMongoShellBoolean(execCommand, 0);
+        }
     }
 }

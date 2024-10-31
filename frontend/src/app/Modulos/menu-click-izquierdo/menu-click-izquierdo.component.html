@@ -1,16 +1,21 @@
 <div class="modal" *ngIf="isVisible" (click)="cerrarMenu()">
     <div *ngIf="isVisible" [ngStyle]="{'top.px': position.y, 'left.px': position.x}" class="context-menu">
-        <ul *ngIf="contextType === 'contenedor'">
+        <ul *ngIf="contextType === 'contenedor' && Compartiendo">
           <li (click)="opcionSeleccionada('Nueva Carpeta')">Nueva Carpeta</li>
+          <li *ngIf="Moviendo" (click)="opcionSeleccionada('Colocar')">Colocar</li>
           <li (click)="opcionSeleccionada('Refrescar')">Refrescar</li>
+          <li (click)="opcionSeleccionada('Texto')">Crear archivo texto</li>
+          <li (click)="opcionSeleccionada('SubirImagen')">Subir imagen</li>
         </ul>
         <ul *ngIf="contextType === 'carpeta'">
-          <li (click)="opcionSeleccionada('Editar')">Abrir</li>
-          <li (click)="opcionSeleccionada('Compartir')">Renombrar</li>
+          <li *ngIf="Compartiendo" (click)="opcionSeleccionada('Editar')">Abrir</li>
+          <li *ngIf="Compartiendo" (click)="opcionSeleccionada('Copia')">Crear una copia</li>
+          <li *ngIf="Compartiendo" (click)="opcionSeleccionada('Mover')">Mover</li>       
+          <li *ngIf="Compartiendo" (click)="opcionSeleccionada('Compartir')">Compartir</li>
           <li (click)="opcionSeleccionada('Eliminar')">Eliminar</li>
         </ul>
       </div>
 </div>
-<app-modal-archivos (Actualizar)="manejarActualizar($event)" [isOpen]="isModalOpen" [archivoSeleccionado]="archivoSeleccionado" [IdPadre]="idPadre" (close)="cerrarModal()"></app-modal-archivos>
+<app-modal-archivos [CrearTexto]="CrearTexto" [Compartir]="Compartiendo" (Actualizar)="manejarActualizar($event)" [isOpen]="isModalOpen" [archivoSeleccionado]="archivoSeleccionado" [IdPadre]="idPadre" (close)="cerrarModal()"></app-modal-archivos>
 
   

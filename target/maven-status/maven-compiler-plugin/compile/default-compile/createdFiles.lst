@@ -1,1 +1,7 @@
 Servlets\UsuariosServlet.class
+DB\UsuariosDB.class
+Servlets\ArchivosServlet.class
+DB\ArchivosDB.class
+DB\Conexion.class
+Controlador\UsuariosControlador.class
+Objeto\Usuario.class
